@@ -1,5 +1,5 @@
 {-# LANGUAGE Unsafe #-}
-{-# LANGUAGE MagicHash, UnboxedTuples, DeriveDataTypeable #-}
+{-# LANGUAGE MagicHash, UnboxedTuples, DeriveDataTypeable, TypeFamilies, MultiParamTypeClasses, FlexibleInstances #-}
 
 -----------------------------------------------------------------------------
 -- |
@@ -57,7 +57,10 @@ module GHC.Exts
         currentCallStack,
 
         -- * The Constraint kind
-        Constraint
+        Constraint,
+        
+        -- * Overloaded lists
+        FromList(..)
        ) where
 
 import Prelude
@@ -130,3 +133,15 @@ traceEvent = Debug.Trace.traceEventIO
 data SpecConstrAnnotation = NoSpecConstr | ForceSpecConstr
                 deriving( Data, Typeable, Eq )
 
+
+-- Overloaded lists
+class FromList l where
+ type (Elem l)
+ fromList :: [Elem l] -> l
+ fromListN :: Int -> [Elem l] -> l
+ fromListN n = fromList . (take n)
+ 
+instance FromList [a] where
+ type (Elem [a]) = a
+ fromList = id
+ fromListN = take
