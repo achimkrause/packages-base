@@ -137,21 +137,20 @@ data SpecConstrAnnotation = NoSpecConstr | ForceSpecConstr
 -- | The 'FromList' class and its methods are intended to be used in
 --   conjunction with the OverloadedLists extension.
 class FromList l where
-  -- | The 'Elem' type function returns the type of elements of the structure
+  -- | The 'Item' type function returns the type of items of the structure
   --   @l@.
-  type (Elem l)
+  type Item l
   
   -- | The 'fromList' function constructs the structure @l@ from the given
-  --   list of @Elem l@
-  fromList  :: [Elem l] -> l
+  --   list of @Item l@
+  fromList  :: [Item l] -> l
   
-  -- | The 'fromListN' function takes the input list's length as a hint.
-  --   Its behaviour should should be equivalent to 'fromList'. The
-  --   hint can be used to construct the structure @l@ more efficiently
-  --   compared to 'fromList'.
-  fromListN :: Int -> [Elem l] -> l
+  -- The 'fromListN' function takes the input list's length as a hint.   Its
+  -- behaviour should be equivalent to 'fromList'. The   hint can be used to
+  -- construct the structure @l@ more efficiently compared to 'fromList'.
+  fromListN :: Int -> [Item l] -> l
   fromListN _ = fromList
  
 instance FromList [a] where
-  type (Elem [a]) = a
+  type (Item [a]) = a
   fromList = id
